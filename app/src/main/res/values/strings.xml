@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">KISS launcher</string>
+    <string name="app_name">KISS of Lucifer launcher</string>
     <string name="activity_setting">KISS settings</string>
     <string name="ui_search_hint">Search apps, contacts, …</string>
     <string name="ui_item_search">Search %1$s for “%2$s”</string>
@@ -369,4 +369,8 @@
     <string name="result_highlighting_underline">Underline</string>
     <string name="result_highlighting_bold">Bold</string>
     <string name="result_highlighting_italic">Italic</string>
+
+    <string name="menu_size_enlarge_horizontally">Enlarge Horizontally</string>
+    <string name="menu_size_reduce_horizontally">Reduce Horizontally</string>
+    <string name="menu_size_square">Square size</string>
 </resources>

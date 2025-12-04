@@ -168,7 +168,7 @@ class Widgets extends Forwarder {
         }
     }
 
-    private void serializeState() {
+    private void serializeState2() {
         List<String> builder = new ArrayList<>(widgetArea.getChildCount());
         for (int i = 0; i < widgetArea.getChildCount(); i++) {
             AppWidgetHostView view = (AppWidgetHostView) widgetArea.getChildAt(i);
@@ -185,6 +185,28 @@ class Widgets extends Forwarder {
         String pref = TextUtils.join(";", builder);
         prefs.edit().putString(WIDGET_PREF_KEY, pref).apply();
     }
+
+    private void serializeState() {
+        List<String> builder = new ArrayList<>(widgetArea.getChildCount());
+        for (int i = 0; i < widgetArea.getChildCount(); i++) {
+            AppWidgetHostView view = (AppWidgetHostView) widgetArea.getChildAt(i);
+            int appWidgetId = view.getAppWidgetId();
+            AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(appWidgetId);
+            if (appWidgetInfo != null) {
+                int lineSize = getLineSize(view);
+                // START OF FIX: Get and save the actual width
+                int width = view.getWidth();
+                builder.add(appWidgetId + "-" + lineSize + "-" + width);
+                // END OF FIX
+            } else {
+                Log.w(TAG, "Unable to retrieve widget by id " + appWidgetId);
+            }
+        }
+
+        String pref = TextUtils.join(";", builder);
+        prefs.edit().putString(WIDGET_PREF_KEY, pref).apply();
+    }
+
 
     /**
      * Display all widgets based on state
@@ -210,7 +232,13 @@ class Widgets extends Forwarder {
             int id = Integer.parseInt(conf[0]);
             int lineSize = Integer.parseInt(conf[1]);
             idsUsed.add(id);
-            addWidget(id, lineSize);
+            int width = 0;
+            if (conf.length > 2) {
+                width = Integer.parseInt(conf[2]);
+            }
+            addWidget(id, lineSize, width);
+
+            //addWidget(id, lineSize);
         }
 
         // kill zombie widgets
@@ -234,7 +262,7 @@ class Widgets extends Forwarder {
      * @param appWidgetId id of widget to add
      * @param lineSize    height of widget given in lines
      */
-    private void addWidget(int appWidgetId, int lineSize) {
+    private void addWidget(int appWidgetId, int lineSize, int width) {
         AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(appWidgetId);
         if (appWidgetInfo == null) {
             Log.i(TAG, "Unable to retrieve widget by id " + appWidgetId);
@@ -245,7 +273,18 @@ class Widgets extends Forwarder {
 
         int height = (int) (lineSize * getLineHeight());
         hostView.setAppWidget(appWidgetId, appWidgetInfo);
+
         setWidgetSize(hostView, height, appWidgetInfo);
+
+        if (hostView.getLayoutParams() instanceof com.google.android.flexbox.FlexboxLayout.LayoutParams) {
+            com.google.android.flexbox.FlexboxLayout.LayoutParams params = (com.google.android.flexbox.FlexboxLayout.LayoutParams) hostView.getLayoutParams();
+            // If a valid width is passed, use it. Otherwise, default to WRAP_CONTENT.
+            if (width > 0) {
+                params.width = width;
+            } else {
+                params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            }
+        }
 
         hostView.setLongClickable(true);
         hostView.setOnLongClickListener(v -> {
@@ -270,7 +309,7 @@ class Widgets extends Forwarder {
         mAppWidgetHost.startListening();
     }
 
-    private void buildPopupMenu(Context context, ArrayAdapter<ListPopup.Item> adapter, AppWidgetProviderInfo currentAppWidgetInfo, AppWidgetHostView widgetWithMenuCurrentlyDisplayed) {
+    private void buildPopupMenu2(Context context, ArrayAdapter<ListPopup.Item> adapter, AppWidgetProviderInfo currentAppWidgetInfo, AppWidgetHostView widgetWithMenuCurrentlyDisplayed) {
         final ViewGroup parent = (ViewGroup) widgetWithMenuCurrentlyDisplayed.getParent();
 
         if (isReconfigurable(currentAppWidgetInfo)) {
@@ -293,7 +332,37 @@ class Widgets extends Forwarder {
         adapter.add(new ListPopup.Item(context, R.string.menu_widget_remove));
     }
 
-    private void popupMenuClickHandler(@StringRes int stringId, AppWidgetHostView widgetWithMenuCurrentlyDisplayed) {
+    private void buildPopupMenu(Context context, ArrayAdapter<ListPopup.Item> adapter, AppWidgetProviderInfo currentAppWidgetInfo, AppWidgetHostView widgetWithMenuCurrentlyDisplayed) {
+        final ViewGroup parent = (ViewGroup) widgetWithMenuCurrentlyDisplayed.getParent();
+
+        if (isReconfigurable(currentAppWidgetInfo)) {
+            adapter.add(new ListPopup.Item(context, R.string.menu_widget_settings));
+        }
+        int increasedLineHeight = getIncreasedLineHeight(widgetWithMenuCurrentlyDisplayed);
+        if (!preventIncreaseLineHeight(increasedLineHeight, currentAppWidgetInfo)) {
+            adapter.add(new ListPopup.Item(context, R.string.menu_size_up));
+        }
+        int decreasedLineHeight = getDecreasedLineHeight(widgetWithMenuCurrentlyDisplayed);
+        if (!preventDecreaseLineHeight(decreasedLineHeight, currentAppWidgetInfo)) {
+            adapter.add(new ListPopup.Item(context, R.string.menu_size_down));
+        }
+
+        // Add horizontal resize options
+        adapter.add(new ListPopup.Item(context, R.string.menu_size_enlarge_horizontally));
+        adapter.add(new ListPopup.Item(context, R.string.menu_size_reduce_horizontally));
+        adapter.add(new ListPopup.Item(context, R.string.menu_size_square));
+
+        if (parent.indexOfChild(widgetWithMenuCurrentlyDisplayed) != 0) {
+            adapter.add(new ListPopup.Item(context, R.string.menu_widget_move_up));
+        }
+        if (parent.indexOfChild(widgetWithMenuCurrentlyDisplayed) != parent.getChildCount() - 1) {
+            adapter.add(new ListPopup.Item(context, R.string.menu_widget_move_down));
+        }
+        adapter.add(new ListPopup.Item(context, R.string.menu_widget_remove));
+    }
+
+
+    private void popupMenuClickHandler2(@StringRes int stringId, AppWidgetHostView widgetWithMenuCurrentlyDisplayed) {
         final ViewGroup parent = (ViewGroup) widgetWithMenuCurrentlyDisplayed.getParent();
         if (stringId == R.string.menu_widget_settings) {
             reConfigureAppWidget(widgetWithMenuCurrentlyDisplayed.getAppWidgetId());
@@ -324,6 +393,63 @@ class Widgets extends Forwarder {
         }
     }
 
+    private void popupMenuClickHandler(@StringRes int stringId, AppWidgetHostView widgetWithMenuCurrentlyDisplayed) {
+        final ViewGroup parent = (ViewGroup) widgetWithMenuCurrentlyDisplayed.getParent();
+        if (stringId == R.string.menu_widget_settings) {
+            reConfigureAppWidget(widgetWithMenuCurrentlyDisplayed.getAppWidgetId());
+        } else if (stringId == R.string.menu_widget_remove) {
+            parent.removeView(widgetWithMenuCurrentlyDisplayed);
+            mAppWidgetHost.deleteAppWidgetId(widgetWithMenuCurrentlyDisplayed.getAppWidgetId());
+            serializeState();
+        } else if (stringId == R.string.menu_size_up) {
+            int newHeight = getIncreasedLineHeight(widgetWithMenuCurrentlyDisplayed);
+            resizeWidget(widgetWithMenuCurrentlyDisplayed, newHeight);
+        } else if (stringId == R.string.menu_size_down) {
+            int newHeight = getDecreasedLineHeight(widgetWithMenuCurrentlyDisplayed);
+            resizeWidget(widgetWithMenuCurrentlyDisplayed, newHeight);
+        }
+        else if (stringId == R.string.menu_size_enlarge_horizontally) {
+            int newWidth = widgetWithMenuCurrentlyDisplayed.getWidth() + 50; // Increase by 50px
+            resizeWidgetHorizontally(widgetWithMenuCurrentlyDisplayed, newWidth);
+        } else if (stringId == R.string.menu_size_reduce_horizontally) {
+            int newWidth = widgetWithMenuCurrentlyDisplayed.getWidth() - 50; // Decrease by 50px
+            resizeWidgetHorizontally(widgetWithMenuCurrentlyDisplayed, newWidth);
+        }
+        else if (stringId == R.string.menu_size_square) {
+            // Get the current width and height
+            int currentWidth = widgetWithMenuCurrentlyDisplayed.getWidth();
+            int currentHeight = widgetWithMenuCurrentlyDisplayed.getHeight();
+
+            // Determine the smaller of the two dimensions
+            int newSize = Math.min(currentWidth, currentHeight);
+
+            // Apply the new square size
+            if (widgetWithMenuCurrentlyDisplayed.getLayoutParams() instanceof com.google.android.flexbox.FlexboxLayout.LayoutParams) {
+                com.google.android.flexbox.FlexboxLayout.LayoutParams params = (com.google.android.flexbox.FlexboxLayout.LayoutParams) widgetWithMenuCurrentlyDisplayed.getLayoutParams();
+                params.width = newSize;
+                params.height = newSize;
+                widgetWithMenuCurrentlyDisplayed.setLayoutParams(params);
+                serializeState();
+            }
+        }
+        else if (stringId == R.string.menu_widget_move_up) {
+            int currentIndex = parent.indexOfChild(widgetWithMenuCurrentlyDisplayed);
+            if (currentIndex >= 1) {
+                parent.removeViewAt(currentIndex);
+                parent.addView(widgetWithMenuCurrentlyDisplayed, currentIndex - 1);
+                serializeState();
+            }
+        } else if (stringId == R.string.menu_widget_move_down) {
+            int currentIndex = parent.indexOfChild(widgetWithMenuCurrentlyDisplayed);
+            if (currentIndex < parent.getChildCount() - 1) {
+                parent.removeViewAt(currentIndex);
+                parent.addView(widgetWithMenuCurrentlyDisplayed, currentIndex + 1);
+                serializeState();
+            }
+        }
+    }
+
+
     /**
      * @param hostView host view of widget
      * @return decreased line height of host view
@@ -348,12 +474,60 @@ class Widgets extends Forwarder {
      * @param hostView host view for widget
      * @param height   height of widget
      */
-    private void setWidgetSize(AppWidgetHostView hostView, int height, @NonNull AppWidgetProviderInfo appWidgetInfo) {
+    private void setWidgetSize2(AppWidgetHostView hostView, int height, @NonNull AppWidgetProviderInfo appWidgetInfo) {
         hostView.setMinimumHeight(height);
         hostView.setMinimumWidth(Math.min(appWidgetInfo.minWidth, appWidgetInfo.minResizeWidth));
         ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
         hostView.setLayoutParams(params);
     }
+
+    private void setWidgetSize(AppWidgetHostView hostView, int height, @NonNull AppWidgetProviderInfo appWidgetInfo) {
+        // *** START OF FIX ***
+        // Ensure the calculated height is never smaller than the widget's minimum height.
+        int effectiveHeight = Math.max(height, appWidgetInfo.minHeight);
+        // *** END OF FIX ***
+
+        hostView.setMinimumHeight(effectiveHeight);
+        hostView.setMinimumWidth(Math.min(appWidgetInfo.minWidth, appWidgetInfo.minResizeWidth));
+
+        com.google.android.flexbox.FlexboxLayout.LayoutParams params;
+
+        if (hostView.getLayoutParams() instanceof com.google.android.flexbox.FlexboxLayout.LayoutParams) {
+            params = (com.google.android.flexbox.FlexboxLayout.LayoutParams) hostView.getLayoutParams();
+            params.height = effectiveHeight; // Only update the height, preserve width
+        } else {
+            // If not (e.g., on first creation), create new parameters with a default width.
+            params = new com.google.android.flexbox.FlexboxLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    effectiveHeight);
+        }
+
+        hostView.setLayoutParams(params);
+    }
+
+
+
+    /**
+     * Set new width to host view of widget.
+     *
+     * @param hostView host view for widget
+     * @param width   width of widget
+     */
+    private void resizeWidgetHorizontally(AppWidgetHostView hostView, int width) {
+        AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(hostView.getAppWidgetId());
+        if (appWidgetInfo == null || width < appWidgetInfo.minResizeWidth) {
+            return;
+        }
+
+        if (hostView.getLayoutParams() instanceof com.google.android.flexbox.FlexboxLayout.LayoutParams) {
+            com.google.android.flexbox.FlexboxLayout.LayoutParams params = (com.google.android.flexbox.FlexboxLayout.LayoutParams) hostView.getLayoutParams();
+            params.width = width;
+            hostView.setLayoutParams(params);
+            serializeState();
+        }
+    }
+
+
 
     /**
      * @param hostView host view of widget
@@ -402,6 +576,28 @@ class Widgets extends Forwarder {
      * @param appWidgetId id of widget to add
      * @param appWidgetInfo
      */
+    private void addAppWidget2(int appWidgetId, AppWidgetProviderInfo appWidgetInfo) {
+        // calculate already used lines
+        int usedLines = 0;
+        for (int i = 0; i < widgetArea.getChildCount(); i++) {
+            View view = widgetArea.getChildAt(i);
+            usedLines += getLineSize(view);
+        }
+        // calculate max available lines
+        int maxVisibleLines = (int) Math.ceil(widgetArea.getHeight() / getLineHeight());
+
+        // calculate initial size for new widget
+        int initialLineSize = getLineSize(getMinHeight(appWidgetInfo));
+        if (initialLineSize < INITIAL_WIDGET_LINE_SIZE && !preventIncreaseLineHeight((int) ((INITIAL_WIDGET_LINE_SIZE - 1) * getLineHeight()), appWidgetInfo)) {
+            initialLineSize = INITIAL_WIDGET_LINE_SIZE;
+        }
+        initialLineSize = Math.max(1, Math.min(maxVisibleLines - usedLines, initialLineSize));
+
+        addWidget(appWidgetId, initialLineSize, 0);
+
+        serializeState();
+    }
+
     private void addAppWidget(int appWidgetId, AppWidgetProviderInfo appWidgetInfo) {
         // calculate already used lines
         int usedLines = 0;
@@ -419,10 +615,15 @@ class Widgets extends Forwarder {
         }
         initialLineSize = Math.max(1, Math.min(maxVisibleLines - usedLines, initialLineSize));
 
-        addWidget(appWidgetId, initialLineSize);
+        // *** START OF THE FIX ***
+        // Get the widget's default minimum width to respect its initial size
+        int initialWidth = appWidgetInfo.minWidth;
+        addWidget(appWidgetId, initialLineSize, initialWidth);
+        // *** END OF THE FIX ***
 
         serializeState();
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private static void requestBindWidget(@NonNull Activity activity, @NonNull Intent data) {

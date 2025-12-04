@@ -10,6 +10,7 @@ buildscript {
 plugins {
     id 'com.android.application'
     id 'net.ltgt.errorprone' version '4.3.0'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
@@ -18,9 +19,9 @@ android {
     }
     defaultConfig {
         applicationId 'fr.neamar.kiss'
-        minSdkVersion 15
-        compileSdkVersion 35
-        targetSdkVersion 35
+        minSdkVersion 21
+        compileSdkVersion 36
+        targetSdkVersion 36
         versionCode 217
         versionName "3.24.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -35,9 +36,15 @@ android {
             applicationIdSuffix ".debug"
         }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        // isCoreLibraryDesugaringEnabled = true
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
     }
 
     lint {
@@ -49,18 +56,21 @@ android {
 }
 
 dependencies {
-    androidTestImplementation 'androidx.test:runner:1.5.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation 'androidx.test:rules:1.5.0'
+    androidTestImplementation 'androidx.test:runner:1.7.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
+    androidTestImplementation 'androidx.test:rules:1.7.0'
 
     implementation 'androidx.annotation:annotation:1.9.1'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.2.21'
+    implementation 'androidx.core:core-ktx:1.17.0'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.4'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.11.4'
-    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.11.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:6.0.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:6.0.1'
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:6.0.1')
     testImplementation 'org.hamcrest:hamcrest-library:3.0'
 
-    errorprone('com.google.errorprone:error_prone_core:2.41.0')
+    errorprone('com.google.errorprone:error_prone_core:2.45.0')
 }
 
 tasks.withType(JavaCompile).configureEach {
