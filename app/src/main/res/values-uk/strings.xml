@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="activity_setting">Налаштування KISS</string>
-    <string name="app_name">Запускач KISS</string>
+    <string name="app_name">Запускач KISS Of Lucifer</string>
     <string name="ui_search_hint">Пошук застосунків, контактів…</string>
     <string name="ui_item_search">Пошук %1$s для “%2$s”</string>
     <string name="ui_item_visit">Відкрити “%1$s”</string>

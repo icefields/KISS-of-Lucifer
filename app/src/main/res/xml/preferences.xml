@@ -296,7 +296,7 @@
             android:key="history-hide-section"
             android:title="@string/history_hide_name">
             <fr.neamar.kiss.preference.SwitchPreference
-                android:defaultValue="false"
+                android:defaultValue="true"
                 android:key="history-hide"
                 android:summary="@string/history_hide_desc"
                 android:title="@string/history_hide_name" />
@@ -354,7 +354,7 @@
                 android:key="gesture-left"
                 android:title="@string/gesture_left_name" />
             <ListPreference
-                android:defaultValue="display-apps"
+                android:defaultValue="display-history"
                 android:entries="@array/gestureEntries"
                 android:entryValues="@array/gestureValues"
                 android:key="gesture-right"

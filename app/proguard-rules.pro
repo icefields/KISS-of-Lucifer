@@ -8,3 +8,8 @@
     public static int d(...);
     public static int e(...);
 }
+
+# Keep the FlexboxLayout class since it's used in XML.
+# While -dontobfuscate prevents renaming, this ensures the class isn't
+# accidentally removed (shrunk) by the optimizer.
+-keep class com.google.android.flexbox.FlexboxLayout { *; }

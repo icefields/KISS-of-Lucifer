@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="ui_search_hint">பயன்பாடுகள், தொடர்புகள், தேடவும்…</string>
     <string name="activity_setting">KISS அமைப்புகள்</string>
-    <string name="app_name">KISS துவக்கி</string>
+    <string name="app_name">KISS Of Lucifer துவக்கி</string>
     <string name="search_provider_reset_desc">தேடல் வழங்குநர்களின் பட்டியலை மீட்டமைக்க விருப்பமா\?</string>
     <string name="search_provider_reset">வலை தேடல் வழங்குநர்களை மீட்டமை</string>
     <string name="custom_search_provider">வலை தேடல் வழங்குநர்களை சேர்</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">KISS palaidējs</string>
+    <string name="app_name">KISS Of Lucifer palaidējs</string>
     <string name="ui_search_hint">Meklēt lietotnes, kontaktpersonas, …</string>
     <string name="ui_item_search">Meklēt “%2$s” %1$s</string>
     <string name="ui_item_phone">Zvanīt “%s”</string>

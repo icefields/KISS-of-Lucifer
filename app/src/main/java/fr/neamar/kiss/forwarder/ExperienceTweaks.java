@@ -143,7 +143,7 @@ public class ExperienceTweaks extends Forwarder {
                 float directionX = e2.getX() - e1.getX();
                 if (Math.abs(directionX) > Math.abs(directionY)) {
                     if (directionX > 0) {
-                        doAction("gesture-right", prefs.getString("gesture-right", "display-apps"));
+                        doAction("gesture-right", prefs.getString("gesture-right", "display-history"));
                     } else {
                         doAction("gesture-left", prefs.getString("gesture-left", "display-apps"));
                     }
@@ -394,7 +394,7 @@ public class ExperienceTweaks extends Forwarder {
     }
 
     protected boolean isMinimalisticModeEnabled() {
-        return prefs.getBoolean("history-hide", false);
+        return prefs.getBoolean("history-hide", true);
     }
 
     protected boolean isMinimalisticModeEnabledForFavorites() {

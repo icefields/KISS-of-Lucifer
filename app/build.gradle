@@ -18,12 +18,12 @@ android {
         buildConfig = true
     }
     defaultConfig {
-        applicationId 'fr.neamar.kiss'
+        applicationId 'ca.chmod666.kissoflucifer'
         minSdkVersion 21
         compileSdkVersion 36
         targetSdkVersion 36
-        versionCode 217
-        versionName "3.24.0"
+        versionCode 1
+        versionName "0.1-1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

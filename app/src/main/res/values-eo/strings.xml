@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">KISS ĵetilo</string>
+    <string name="app_name">KISS Of Lucifer ĵetilo</string>
     <string name="activity_setting">Agordoj de KISS</string>
     <string name="ui_search_hint">Serĉi aplikaĵojn, kontaktojn, …</string>
     <string name="ui_item_search">Serĉi %1$s por “%2$s”</string>
