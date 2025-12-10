@@ -5,6 +5,6 @@
 * fix theme for KISS settings, do not apply advanced theme customisations
 * fix call option not showing for phone number
 * make internal shortcut id unique to allow multiple shortcuts with same name
-* convert keypad letters to digits during phone number normalisation
+* convert keypad letters to digits during phone number normalization
 * use updated search algorithm by default
 * add setting to define how matches in results are highlighted
