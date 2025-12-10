@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">KISS appstarter</string>
+    <string name="app_name">KISS Of Lucifer appstarter</string>
     <string name="activity_setting">KISS indstillinger</string>
     <string name="ui_search_hint">Søg i apps, kontakter…</string>
     <string name="ui_item_search">Søg med %1$s efter “%2$s”</string>

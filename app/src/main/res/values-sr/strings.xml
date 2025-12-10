@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">KISS покретач</string>
+    <string name="app_name">KISS Of Lucifer покретач</string>
     <string name="activity_setting">Поставке</string>
     <string name="ui_search_hint">Тражите апликације, контакте…</string>
     <string name="ui_item_search">%1$s Тражи “%2$s”</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">KISS launcher</string>
+    <string name="app_name">KISS Of Lucifer launcher</string>
     <string name="activity_setting">Configuración de KISS</string>
     <string name="ui_search_hint">Buscar aplicaciones, contactos, …</string>
     <string name="ui_item_search">Buscar «%2$s» en %1$s</string>

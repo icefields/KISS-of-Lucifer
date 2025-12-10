@@ -41,6 +41,16 @@ public class WidgetView extends AppWidgetHostView {
                 break;
             }
             case MotionEvent.ACTION_MOVE: {
+//                final int touchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+
+//                // If the finger has moved beyond this threshold, it's a scroll gesture.
+//                if (Math.abs(ev.getX() - xPos) > touchSlop || Math.abs(ev.getY() - yPos) > touchSlop) {
+//                    // *** THIS IS THE CRITICAL FIX ***
+//                    // A scroll has been detected, so we must cancel the pending long press.
+//                    // The cancelLongPress() method handles both resetting the flag
+//                    // and removing the scheduled runnable.
+//                    cancelLongPress();
+//                }
                 if (Math.abs(ev.getX() - xPos) > 5 || Math.abs(ev.getY() - yPos) > 5) {
                     mHasPerformedLongPress = false;
                     if (mPendingCheckForLongPress != null) {
@@ -88,7 +98,7 @@ public class WidgetView extends AppWidgetHostView {
             mPendingCheckForLongPress = new CheckForLongPress();
         }
         mPendingCheckForLongPress.rememberWindowAttachCount();
-        postDelayed(mPendingCheckForLongPress, ViewConfiguration.getLongPressTimeout());
+        postDelayed(mPendingCheckForLongPress, ViewConfiguration.getLongPressTimeout() + 666);
     }
 
     @Override
@@ -108,18 +118,47 @@ public class WidgetView extends AppWidgetHostView {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
+        super.onSizeChanged(w, h, oldw, oldh);        // A threshold to prevent updates on minor layout changes (e.g., a 1-pixel shift)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            // calculate size in dips
-            float density = getResources().getDisplayMetrics().density;
-            int widthDips = (int) (w / density);
-            int heightDips = (int) (h / density);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                updateAppWidgetSize(Bundle.EMPTY, Collections.singletonList(new SizeF(widthDips, heightDips)));
-            } else {
-                updateAppWidgetSize(null, widthDips, heightDips, widthDips, heightDips);
-            }
-        }
+//        if (oldw == 0 || oldh == 0) {
+//            return;
+//        }
+//
+//        final int SIGNIFICANT_CHANGE_THRESHOLD = 10; // 10 pixels
+//
+//        // Only update the widget's internal layout if the size has changed meaningfully.
+//        // This prevents the widget from resetting its size during minor parent layout passes,
+//        // which was the root cause of the previous problem.
+//        if (Math.abs(w - oldw) > SIGNIFICANT_CHANGE_THRESHOLD || Math.abs(h - oldh) > SIGNIFICANT_CHANGE_THRESHOLD) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//                // calculate size in dips
+//                float density = getResources().getDisplayMetrics().density;
+//                int widthDips = (int) (w / density);
+//                int heightDips = (int) (h / density);
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//                    updateAppWidgetSize(Bundle.EMPTY, Collections.singletonList(new SizeF(widthDips, heightDips)));
+//                } else {
+//                    updateAppWidgetSize(null, widthDips, heightDips, widthDips, heightDips);
+//                }
+//            }
+//        }
     }
+
+
+//    @Override
+//    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+//        super.onSizeChanged(w, h, oldw, oldh);
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//            // calculate size in dips
+//            float density = getResources().getDisplayMetrics().density;
+//            int widthDips = (int) (w / density);
+//            int heightDips = (int) (h / density);
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//                updateAppWidgetSize(Bundle.EMPTY, Collections.singletonList(new SizeF(widthDips, heightDips)));
+//            } else {
+//                updateAppWidgetSize(null, widthDips, heightDips, widthDips, heightDips);
+//            }
+//        }
+//    }
 }

@@ -23,6 +23,8 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.flexbox.FlexboxLayout;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -152,6 +154,43 @@ public class Favorites extends Forwarder implements View.OnClickListener, View.O
                     // We need to remove the view from its parent first
                     ((ViewGroup) viewHolder.view.getParent()).removeView(viewHolder.view);
                 }
+
+                int barWidth = favoritesBar.getWidth();
+
+//                if (barWidth > 0) {
+//                    // Define a base for how many icons we want per row
+//                    final int BASE_ICONS_PER_ROW = 7;
+//
+//                    // If we have fewer favorites than the base, use the actual count
+//                    // to make them fill the row. Otherwise, use the base.
+//                    int iconsPerRow = Math.min(favCount, BASE_ICONS_PER_ROW);
+//                    if (iconsPerRow == 0) iconsPerRow = 1; // Avoid division by zero
+//
+//                    // Calculate the ideal size
+//                    iconSize = barWidth / iconsPerRow;
+//
+//                    // To prevent 1 or 2 icons from becoming huge, enforce a maximum size.
+//                    // Let's set the max size to be 120% of the default favorite height.
+//                    int maxIconSize = (int) (mainActivity.getResources().getDimensionPixelSize(R.dimen.favorite_height) * 1.2);
+//
+//                    if (iconSize > maxIconSize) {
+//                        iconSize = maxIconSize;
+//                    }
+//
+//                } else {
+//                    // Fallback to the default size if the parent width is not available yet.
+//                    iconSize = mainActivity.getResources().getDimensionPixelSize(R.dimen.favorite_height);
+//                }
+
+                // Use a single, consistent size for all icons for a clean grid layout.
+                int iconSize = mainActivity.getResources().getDimensionPixelSize(R.dimen.favorite_height);
+
+                // Create LayoutParams for FlexboxLayout with the calculated size
+                FlexboxLayout.LayoutParams lp = new FlexboxLayout.LayoutParams(
+                        iconSize,
+                        iconSize);
+                viewHolder.view.setLayoutParams(lp);
+
                 favoritesBar.addView(viewHolder.view, i);
                 // Remove old current view, which is now out of date. Useful for dynamic icons to ensure only the dynamic icon is updated, and everything else remains the same
                 disposeOf(currentView);

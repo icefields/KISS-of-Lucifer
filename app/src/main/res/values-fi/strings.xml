@@ -58,7 +58,7 @@
     <string name="menu_contact_copy_phone">Kopioi puhelinnumero</string>
     <string name="menu_phone_create">Luo yhteystieto…</string>
     <string name="toast_favorites_added">%s lisättiin suosikeihin</string>
-    <string name="app_name">KISS-käynnistin</string>
+    <string name="app_name">KISS Of Lucifer käynnistin</string>
     <string name="activity_setting">KISS-käynnistimen asetukset</string>
     <string name="ui_item_search">Hae %1$s-hakukoneella ”%2$s”</string>
     <string name="ui_item_visit">Siirry ”%1$s”</string>

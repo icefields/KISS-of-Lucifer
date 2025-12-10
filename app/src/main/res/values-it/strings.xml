@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">KISS Launcher</string>
+    <string name="app_name">KISS Of Lucifer Launcher</string>
     <string name="activity_setting">Impostazioni KISS</string>
     <string name="ui_search_hint">Cerca applicazioni, contatti, …</string>
     <string name="ui_item_search">Cerca con %1$s: “%2$s”</string>

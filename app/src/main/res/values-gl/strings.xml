@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">Lanzador KISS</string>
+    <string name="app_name">Lanzador KISS Of Lucifer</string>
     <string name="activity_setting">Axustes de KISS</string>
     <string name="ui_search_hint">Buscar aplicacións, contactos, …</string>
     <string name="ui_item_search">%1$s Buscar \"%2$s\"</string>
